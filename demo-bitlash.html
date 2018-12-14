@@ -35,6 +35,8 @@
 
   <p>
     <button onclick="showCode()">Generar Bitlash</button>
+    <button onclick="showXml()">Generar Xml</button>
+    <button onclick="readXml()">Leer Xml</button>
   </p>
 
 	<textarea id="src"></textarea>
@@ -49,6 +51,7 @@
       <block type="logic_boolean"></block>
     </category>
     <category name="Loops" colour="%{BKY_LOOPS_HUE}">
+      <block type="controls_for"></block>
       <block type="controls_repeat_ext">
         <value name="TIMES">
           <block type="math_number">
@@ -132,9 +135,21 @@
       // Generate Bitlash code and display it.
       Blockly.Bitlash.INFINITE_LOOP_TRAP = null;
       var code = Blockly.Bitlash.workspaceToCode(demoWorkspace);
-     	document.getElementById('src').innerHTML= code; 
+     	document.getElementById('src').value= code; 
     }
-  </script>
+ 
+ 		function showXml() { 
+			var xmlDom = Blockly.Xml.workspaceToDom(demoWorkspace);
+ 	   	var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
+     	document.getElementById('src').value= xmlText; 
+		}
+
+		function readXml() {
+    	var xml = Blockly.Xml.textToDom(document.getElementById('src').value);
+    	Blockly.Xml.domToWorkspace(xml, demoWorkspace);
+		}
+
+</script>
 
 </body>
 </html>

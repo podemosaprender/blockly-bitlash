@@ -90,16 +90,17 @@ Blockly.Bitlash['controls_for'] = function(block) {
       Blockly.isNumber(increment)) {
     // All arguments are simple numbers.
     var up = parseFloat(argument0) <= parseFloat(argument1);
-    code = 'for (' + variable0 + ' = ' + argument0 + '; ' +
-        variable0 + (up ? ' <= ' : ' >= ') + argument1 + '; ' +
-        variable0;
+    code = variable0 + ' = ' + argument0 + '; ' +
+       'while ('+ variable0 + (up ? ' <= ' : ' >= ') + argument1 + ') '; 
+    code += ') {' + branch + '; ';
+    code += variable0;
     var step = Math.abs(parseFloat(increment));
     if (step == 1) {
       code += up ? '++' : '--';
     } else {
       code += (up ? ' += ' : ' -= ') + step;
     }
-    code += ') {\n' + branch + '}\n';
+		code += "}";
   } else {
     code = '';
     // Cache non-trivial values to variables to prevent repeated look-ups.
@@ -107,33 +108,34 @@ Blockly.Bitlash['controls_for'] = function(block) {
     if (!argument0.match(/^\w+$/) && !Blockly.isNumber(argument0)) {
       startVar = Blockly.Bitlash.variableDB_.getDistinctName(
           variable0 + '_start', Blockly.Variables.NAME_TYPE);
-      code += 'var ' + startVar + ' = ' + argument0 + ';\n';
+      code += startVar + ' = ' + argument0 + '; ';
     }
     var endVar = argument1;
     if (!argument1.match(/^\w+$/) && !Blockly.isNumber(argument1)) {
       var endVar = Blockly.Bitlash.variableDB_.getDistinctName(
           variable0 + '_end', Blockly.Variables.NAME_TYPE);
-      code += 'var ' + endVar + ' = ' + argument1 + ';\n';
+      code += endVar + ' = ' + argument1 + '; ';
     }
     // Determine loop direction at start, in case one of the bounds
     // changes during loop execution.
     var incVar = Blockly.Bitlash.variableDB_.getDistinctName(
         variable0 + '_inc', Blockly.Variables.NAME_TYPE);
-    code += 'var ' + incVar + ' = ';
+    code += incVar + ' = ';
     if (Blockly.isNumber(increment)) {
       code += Math.abs(increment) + ';\n';
     } else {
       code += 'Math.abs(' + increment + ');\n';
     }
-    code += 'if (' + startVar + ' > ' + endVar + ') {\n';
-    code += Blockly.Bitlash.INDENT + incVar + ' = -' + incVar + ';\n';
-    code += '}\n';
-    code += 'for (' + variable0 + ' = ' + startVar + '; ' +
-        incVar + ' >= 0 ? ' +
+    code += 'if (' + startVar + ' > ' + endVar + ') { ';
+    code += incVar + ' = -' + incVar + ';';
+    code += '} ';
+    code += variable0 + ' = ' + startVar + '; ' +
+        'while ('+incVar + ' >= 0 ? ' +
         variable0 + ' <= ' + endVar + ' : ' +
         variable0 + ' >= ' + endVar + '; ' +
-        variable0 + ' += ' + incVar + ') {\n' +
-        branch + '}\n';
+        ') { ' +
+        branch + '; ' +
+			 	variable0 + ' += ' + incVar +	'}';
   }
   return code;
 };
