@@ -48,12 +48,11 @@ Blockly.Bitlash['controls_repeat_ext'] = function(block) {
   if (!repeats.match(/^\w+$/) && !Blockly.isNumber(repeats)) {
     var endVar = Blockly.Bitlash.variableDB_.getDistinctName(
         'repeat_end', Blockly.Variables.NAME_TYPE);
-    code += 'var ' + endVar + ' = ' + repeats + ';\n';
+    code += endVar + ' = ' + repeats + '; ';
   }
-  code += 'for (var ' + loopVar + ' = 0; ' +
-      loopVar + ' < ' + endVar + '; ' +
-      loopVar + '++) {\n' +
-      branch + '}\n';
+  code += loopVar + ' = 0; ' +
+      'while ('+ loopVar + ' < ' + endVar + ') '+
+      '{' + branch + '; '+ loopVar +'++} ';
   return code;
 };
 
