@@ -50,6 +50,7 @@
 #   php_compressed.js: The compressed PHP generator.
 #   lua_compressed.js: The compressed Lua generator.
 #   dart_compressed.js: The compressed Dart generator.
+#   bitlash_compressed.js: The compressed Bitlash generator.
 #   msg/js/<LANG>.js for every language <LANG> defined in msg/js/<LANG>.json.
 
 import sys
@@ -206,6 +207,7 @@ class Gen_compressed(threading.Thread):
       self.gen_blocks()
 
     if ('generators' in self.bundles):
+      self.gen_generator("bitlash")
       self.gen_generator("javascript")
       self.gen_generator("python")
       self.gen_generator("php")
